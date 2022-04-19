@@ -3,6 +3,8 @@ stages:          # List of stages for jobs, and their order of execution
 
 update:
   stage: update
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
   before_script:
     - git config --global user.email "git@git.fginfo.tu-bs.de"
     - git config --global user.name "Gitlab CI"
