@@ -1,0 +1,30 @@
+#!/bin/sh
+
+update() {
+  url="$1"
+  pad="$(basename $url).txt"
+  dst="$pad"
+  gitdir="$(dirname $dst)"
+  
+  curl --silent -k -o "${dst}" "${url}/export/txt"
+  status="$?"
+  
+  if [ ${status} -ne 0 ]; then
+  	echo "Failed to get pad at ${url}"
+  	exit ${status}
+  else
+  	git -C "${gitdir}" add "${dst}"
+  	changes=$(git -C "${gitdir}" diff --cached | wc -l)
+  	if [ "$changes" -gt 0 ]; then
+  		git -C "${gitdir}" commit -m "Updated: ${dst} from ${url}"
+  	else
+  		echo "Nothing changed for ${url}"
+  	fi
+  fi
+  
+  git -C "${gitdir}" reset --hard HEAD
+}
+
+while read -r pad; do
+  update "$pad"
+done
