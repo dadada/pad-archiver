@@ -1,0 +1,11 @@
+stages:          # List of stages for jobs, and their order of execution
+  - update
+
+update:
+  stage: update
+  before_script:
+    - git config --global user.email "git@git.fginfo.tu-bs.de"
+    - git config --global user.name "Gitlab CI"
+  script:
+    - ./update < pads.txt
+    - git push "https://${GITLAB_USER_NAME}:${CI_ACCESS_TOKEN}@${CI_REPOSITORY_URL#*@}" "HEAD:${CI_COMMIT_REF_NAME}" -o skip-ci
