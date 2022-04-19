@@ -2,8 +2,6 @@ stages:
   - update
 
 update:
-  tags:
-    - shell
   stage: update
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
