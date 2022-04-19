@@ -4,6 +4,6 @@ Archives your pad. Use in your project that contains `pads.txt`, containing a li
 
 ```
 include:
-  - project: '/fginfo/pad-archiver'
+  - project: 'fginfo/pad-archiver'
     file: 'lib/gitlab-ci.yml'
 ```
