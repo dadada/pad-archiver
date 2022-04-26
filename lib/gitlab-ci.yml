@@ -2,7 +2,9 @@ stages:
   - update
 
 update:
-  image: git.fginfo.tu-bs.de/fginfo/pad-archiver:latest
+  image: git.fginfo.tu-bs.de:5050/fginfo/pad-archiver:main
+  tags:
+    - docker
   stage: update
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
