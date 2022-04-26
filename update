@@ -13,9 +13,10 @@ update() {
     return
   fi
 
-  newlength="$(wc -l ${dst})"
+  newlength="$(wc -l < ${dst})"
   if [ "$newlength" -lt 3 ]
   then
+    echo "Skipping update of ${url}, because pad has likely been removed"
     return
   fi
 
