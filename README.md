@@ -7,3 +7,5 @@ include:
   - project: 'fginfo/pad-archiver'
     file: 'lib/gitlab-ci.yml'
 ```
+
+The including CI configuration has to provide a `CI_ACCESS_TOKEN` that can push to the repo.
