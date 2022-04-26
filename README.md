@@ -14,4 +14,4 @@ include:
     file: 'lib/gitlab-ci.yml'
 ```
 
-The project including the CI configuration has to provide the variable `CI_ACCESS_TOKEN`. The variable must contain  a project access token that can push to commits to your project.
+The project that includes the CI configuration has to provide the environment variable `CI_ACCESS_TOKEN`. The variable must contain  a project access token that can push commits to your project.
