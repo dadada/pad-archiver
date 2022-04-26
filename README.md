@@ -8,4 +8,4 @@ include:
     file: 'lib/gitlab-ci.yml'
 ```
 
-The including CI configuration has to provide a `CI_ACCESS_TOKEN` that can push to the repo.
+The project including the CI configuration has to provide the variable `CI_ACCESS_TOKEN`. It must contain  a project access token that can push to the repo.
