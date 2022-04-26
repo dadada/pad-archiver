@@ -5,7 +5,7 @@ build_image:
   tags:
     - shell
   variables:
-    IMAGE_NAME: git.fginfo.tu-bs.de:5000/fginfo/pad-archiver
+    IMAGE_NAME: git.fginfo.tu-bs.de:5050/fginfo/pad-archiver
   rules:
     - if: '$CI_DEFAULT_BRANCH  == $CI_COMMIT_BRANCH'
   script:
