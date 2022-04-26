@@ -2,6 +2,8 @@ before_script:
   - docker info
 
 build_image:
+  tags:
+    - shell
   variables:
     IMAGE_NAME: git.fginfo.tu-bs.de:5000/fginfo/pad-archiver
   rules:
