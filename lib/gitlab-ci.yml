@@ -13,4 +13,4 @@ update:
     - git config --global user.name "Gitlab CI"
   script:
     - /update < pads.txt
-    - git push "${CI_ACCESS_TOKEN}@${CI_REPOSITORY_URL#*@}" "HEAD:${CI_COMMIT_REF_NAME}" -o skip-ci
+    - git push "https://${CI_ACCESS_TOKEN}@${CI_REPOSITORY_URL#*@}" "HEAD:${CI_COMMIT_REF_NAME}" -o skip-ci
