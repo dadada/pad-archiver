@@ -1,6 +1,5 @@
 build_image:
-  image:
-    - docker:latest
+  image: docker:latest
   services:
     - docker:dind
   before_script:
