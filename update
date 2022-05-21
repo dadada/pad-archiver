@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/sh
 
 update() {
   url="$1"
@@ -30,13 +30,13 @@ update() {
   echo "\e[1;32mUpdated ${dst} from ${url}\e[0m"
 }
 
-if ! git rev-parse --is-inside-work-tree > /dev/null
+if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1
 then
-  echo -e "\e[1;31mNot a working directory\e[0m"
+  echo -e "\e[1;31mNot a git directory\e[0m"
   exit 1
 fi
 
-gitdir="$(realpath ${1:-$PWD})"
+gitdir="$(realpath "${1:-$PWD}")"
 while read -r pad
 do
   update "$pad"
