@@ -1,43 +1,44 @@
-#!/bin/sh
+#!/usr/bin/bash
 
 update() {
   url="$1"
   pad="$(basename "$url").txt"
-  dst="$pad"
-  gitdir="$(dirname "$dst")"
+  dst="$gitdir/$pad"
   
   curl --silent -k -o "${dst}" "${url}/export/txt"
   status="$?"
   if [ ${status} -ne 0 ]; then
-    echo "Failed to get pad at ${url}"
+    echo -e "\e[1;31mFailed to get pad at ${url}\e[0m"
     return
   fi
 
   newlength="$(wc -l < "${dst}")"
   if [ "$newlength" -lt 3 ]
   then
-    echo "Skipping update of ${url}, because pad has likely been removed"
+    echo -e "\e[1;33mSkipping update of ${url}, because pad has likely been removed\e[0m"
     return
   fi
 
   git -C "${gitdir}" add "${dst}"
   changes=$(git -C "${gitdir}" diff --cached | wc -l)
   if [ "$changes" -lt 1 ]; then
-    echo "Nothing changed for ${url}"
+    echo -e "\e[1;34mNothing changed for ${url}\e[0m"
     return
   fi
 
-  git -C "${gitdir}" commit -m "Updated: ${dst} from ${url}"
+  git -C "${gitdir}" commit -m "Updated: ${dst} from ${url}" > /dev/null
+  echo "\e[1;32mUpdated ${dst} from ${url}\e[0m"
 }
 
-if ! git rev-parse --is-inside-work-tree
+if ! git rev-parse --is-inside-work-tree > /dev/null
 then
-  echo "Not a working directory"
+  echo -e "\e[1;31mNot a working directory\e[0m"
   exit 1
 fi
 
+gitdir="$(realpath ${1:-$PWD})"
 while read -r pad
 do
   update "$pad"
-  git -C "${gitdir}" reset --hard HEAD
+  git -C "${gitdir}" reset --hard HEAD > /dev/null
 done
