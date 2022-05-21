@@ -2,9 +2,9 @@
 
 update() {
   url="$1"
-  pad="$(basename $url).txt"
+  pad="$(basename "$url").txt"
   dst="$pad"
-  gitdir="$(dirname $dst)"
+  gitdir="$(dirname "$dst")"
   
   curl --silent -k -o "${dst}" "${url}/export/txt"
   status="$?"
@@ -13,7 +13,7 @@ update() {
     return
   fi
 
-  newlength="$(wc -l < ${dst})"
+  newlength="$(wc -l < "${dst}")"
   if [ "$newlength" -lt 3 ]
   then
     echo "Skipping update of ${url}, because pad has likely been removed"
@@ -22,11 +22,12 @@ update() {
 
   git -C "${gitdir}" add "${dst}"
   changes=$(git -C "${gitdir}" diff --cached | wc -l)
-  if [ "$changes" -gt 0 ]; then
-    git -C "${gitdir}" commit -m "Updated: ${dst} from ${url}"
-  else
+  if [ "$changes" -lt 1 ]; then
     echo "Nothing changed for ${url}"
+    return
   fi
+
+  git -C "${gitdir}" commit -m "Updated: ${dst} from ${url}"
 }
 
 if ! git rev-parse --is-inside-work-tree
