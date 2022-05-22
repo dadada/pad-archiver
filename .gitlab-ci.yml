@@ -13,7 +13,7 @@ build_image:
   needs:
     - job: build_pad-archiver
       artifacts: true
-  image: docker@sha256:c24538b2a7a081efc81185772bd8066d33cbf1f3e1a8249657395bdad4d5f844
+  image: docker@sha256:f4fab13090bb25bc725f04b85b67fc47c6d5189b566fb375d4e16cec37ea25ac
   services:
     - docker@sha256:d8b7b9468fe6dc26f008f6eadafa2845dc0408a3c5e86fc9e04f6bcc2d98bf13
   before_script:
