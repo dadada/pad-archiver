@@ -1,4 +1,17 @@
+build pad-archiver:
+  image: golang:latest
+  script:
+    - go build
+  artifacts:
+    paths:
+      - pad-archiver
+    expire_in: 1 week
+  tags:
+    - docker
+
 build_image:
+  dependencies:
+    - build pad-archiver
   image: docker:latest
   services:
     - docker:dind
