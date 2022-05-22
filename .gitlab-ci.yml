@@ -10,7 +10,7 @@ build_pad-archiver:
     - docker
 
 build_image:
-  dependencies:
+  needs:
     - build_pad-archiver
   image: docker:latest
   services:
