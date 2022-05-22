@@ -1,0 +1,5 @@
+*.swp
+.direnv
+pad-archiver
+result
+testgit
