@@ -1,16 +1,5 @@
+*.swp
 .direnv
-<<<<<<< HEAD
-<<<<<<< HEAD
-||||||| parent of 2ccfcd1 (fixup flake)
-testgit
-*.swp
-=======
-testgit
-*.swp
+pad-archiver
 result
->>>>>>> 2ccfcd1 (fixup flake)
-||||||| parent of 056d53e (port to go)
-=======
 testgit
-*.swp
->>>>>>> 056d53e (port to go)
