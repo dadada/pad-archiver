@@ -1,0 +1,10 @@
+.direnv
+<<<<<<< HEAD
+||||||| parent of 2ccfcd1 (fixup flake)
+testgit
+*.swp
+=======
+testgit
+*.swp
+result
+>>>>>>> 2ccfcd1 (fixup flake)
