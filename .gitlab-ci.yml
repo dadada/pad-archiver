@@ -1,4 +1,4 @@
-build pad-archiver:
+build_pad-archiver:
   image: golang:latest
   script:
     - go build
@@ -11,7 +11,7 @@ build pad-archiver:
 
 build_image:
   dependencies:
-    - build pad-archiver
+    - build_pad-archiver
   image: docker:latest
   services:
     - docker:dind
