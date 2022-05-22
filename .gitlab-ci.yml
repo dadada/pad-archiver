@@ -1,5 +1,5 @@
 build_pad-archiver:
-  image: golang:7d1902a99d63c7f43a7549a661ce718b563707c0faad5862444423759935f2d6
+  image: golang@sha256:7d1902a99d63c7f43a7549a661ce718b563707c0faad5862444423759935f2d6
   script:
     - go build
   artifacts:
@@ -13,9 +13,9 @@ build_image:
   needs:
     - job: build_pad-archiver
       artifacts: true
-  image: docker:latest
+  image: docker@sha256:c24538b2a7a081efc81185772bd8066d33cbf1f3e1a8249657395bdad4d5f844
   services:
-    - docker:aebcc272b7bdbc8b6996c0953f6e9abe31a609f2c0abe4ec4a0f6f4b700080d4
+    - docker@sha256:d8b7b9468fe6dc26f008f6eadafa2845dc0408a3c5e86fc9e04f6bcc2d98bf13
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker info
