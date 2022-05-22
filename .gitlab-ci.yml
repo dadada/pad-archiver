@@ -15,7 +15,7 @@ build_image:
       artifacts: true
   image: docker@sha256:f4fab13090bb25bc725f04b85b67fc47c6d5189b566fb375d4e16cec37ea25ac
   services:
-    - docker@sha256:380c9c4d4e22df812e5b7d891c16b162837aa78c8263f1301175a2173d2961f5
+    - docker:dind@sha256:380c9c4d4e22df812e5b7d891c16b162837aa78c8263f1301175a2173d2961f5
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker info
