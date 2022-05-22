@@ -8,7 +8,7 @@
       let pkgs = nixpkgs.legacyPackages.${system}; in
       rec {
         packages = flake-utils.lib.flattenTree {
-          hello = pkgs.callPackage ./nix { pkgs = pkgs; };
+          pad-archiver = pkgs.callPackage ./nix { pkgs = pkgs; };
           gitAndTools = pkgs.gitAndTools;
         };
         defaultPackage = packages.pad-archiver;
