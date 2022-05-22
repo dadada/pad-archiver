@@ -11,7 +11,8 @@ build_pad-archiver:
 
 build_image:
   needs:
-    - build_pad-archiver
+    - job: build_pad-archiver
+      artifacts: true
   image: docker:latest
   services:
     - docker:dind
