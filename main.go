@@ -39,18 +39,17 @@ func Commit(
 	Commitmu.Lock()
 	defer Commitmu.Unlock()
 
+	if _, err := tree.Add(padfile); err != nil {
+		return plumbing.ZeroHash, fmt.Errorf("Failed to stage %s: %w", padfile, err)
+	}
+
 	status, err := tree.Status()
 	if err != nil {
 		return plumbing.ZeroHash, fmt.Errorf("Failed to get status of %s", padfile)
 	}
 
-	if _, err := tree.Add(padfile); err != nil {
-		return plumbing.ZeroHash, fmt.Errorf("Failed to stage %s: %w", padfile, err)
-	}
-
 	fileStatus := status.File(padfile)
-	if fileStatus.Staging == git.Unmodified ||
-	   fileStatus.Staging == git.Untracked {
+	if fileStatus.Staging != git.Added && fileStatus.Staging != git.Modified {
 		return plumbing.ZeroHash, NothingToDo
 	}
 
@@ -102,26 +101,30 @@ func Download(
 }
 
 
-func PushChanges(
+func CreateRemote(
 	repo *git.Repository,
 	remote string,
-	auth githttp.AuthMethod,
-) error {
-	if _, err := repo.Remote(DefaultRemoteName); err != nil {
+) (*git.Remote, error) {
+	newRemote, err := repo.Remote(DefaultRemoteName)
+	if err != nil {
 		log.Println("Creating new git remote " + DefaultRemoteName)
-		if _, err = repo.CreateRemote(&config.RemoteConfig{
+		return repo.CreateRemote(&config.RemoteConfig{
 			Name: DefaultRemoteName,
 			URLs: []string{remote},
-		}); err != nil {
-			log.Fatalf("%s", err)
-		}
+		})
 	}
 
+	return newRemote, nil
+}
+
+func Push(
+	auth *githttp.BasicAuth,
+	repo *git.Repository,
+) error {
 	return repo.Push(&git.PushOptions{
 		RemoteName: DefaultRemoteName,
 		Auth: auth,
 	})
-
 }
 
 func main() {
@@ -202,18 +205,22 @@ func main() {
 
 	tree.Clean(&git.CleanOptions{Dir: true})
 
+	auth := &githttp.BasicAuth{
+		Username: *username,
+		Password: *password,
+	}
+
+	CreateRemote(repo, *remote)
+
 	if *push == true {
-		auth := &githttp.BasicAuth{
-			Username: *username,
-			Password: *password,
-		}
-		if err := PushChanges(repo, *remote, auth); err != nil {
+		if err := Push(auth, repo); err != nil {
 			if err == git.NoErrAlreadyUpToDate {
 				log.Println("Already up-to-date")
 			} else {
 				log.Fatalf("%s", err)
 			}
+		} else {
+			log.Println("Pushed changes to remote")
 		}
-		log.Println("Pushed changes to remote")
 	}
 }
