@@ -1,6 +1,11 @@
-FROM alpine/git@sha256:8f4173e730f0ae6df38e35695120ab77a0c3e0593d34b6cbe7ee585497f61013
+FROM golang:1.18
 
-ADD ./pad-archiver /pad-archiver
+WORKDIR /usr/src/app
 
-# Override ENTRYPOINT of alpine/git
-ENTRYPOINT /bin/sh
+COPY go.mod go.sum ./
+RUN go mod download && go mod verify
+
+COPY . .
+RUN go build -v -o /usr/local/bin/pad-archiver ./...
+
+CMD ["pad-archiver"]
