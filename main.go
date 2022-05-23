@@ -33,6 +33,10 @@ func commit(
 	commitmu.Lock()
 	defer commitmu.Unlock()
 
+	if _, err := tree.Add(padfile); err != nil {
+		return plumbing.ZeroHash, fmt.Errorf("Failed to stage %s: %w", padfile, err)
+	}
+
 	commit, err := tree.Commit(
 		fmt.Sprintf("Updated %s from %s", padfile, url),
 		&git.CommitOptions{
@@ -83,10 +87,6 @@ func update(
 
 	if status.IsClean() {
 		return plumbing.ZeroHash, fmt.Errorf("No changes recorded for %s", url)
-	}
-
-	if _, err = tree.Add(padfile); err != nil {
-		return plumbing.ZeroHash, fmt.Errorf("Failed to stage %s: %w", padfile, err)
 	}
 
 	return commit(tree, padfile, url)
