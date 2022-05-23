@@ -187,7 +187,11 @@ func main() {
 			Password: *password,
 		}
 		if err := PushChanges(repo, *remote, auth); err != nil {
-			log.Fatalf("%s", err)
+			if err == git.NoErrAlreadyUpToDate {
+				log.Println("Already up-to-date")
+			} else {
+				log.Fatalf("%s", err)
+			}
 		}
 		log.Println("Pushed changes to remote")
 	}
