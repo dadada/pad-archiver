@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"crypto/tls"
 	"flag"
 	"fmt"
 	"io"
@@ -10,14 +11,17 @@ import (
 	"os"
 	"path"
 	"path/filepath"
-	"time"
-	"crypto/tls"
 	"sync"
+	"time"
 
 	"github.com/go-git/go-git/v5"
+	"github.com/go-git/go-git/v5/config"
 	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/go-git/go-git/v5/plumbing/object"
+	githttp "github.com/go-git/go-git/v5/plumbing/transport/http"
 )
+
+const DefaultRemoteName = "pad-archiver"
 
 var commitmu sync.Mutex
 
@@ -88,6 +92,29 @@ func update(
 	return commit(tree, padfile, url)
 }
 
+
+func PushChanges(
+	repo *git.Repository,
+	remote string,
+	auth githttp.AuthMethod,
+) error {
+	if _, err := repo.Remote(DefaultRemoteName); err != nil {
+		log.Println("Creating new git remote " + DefaultRemoteName)
+		if _, err = repo.CreateRemote(&config.RemoteConfig{
+			Name: DefaultRemoteName,
+			URLs: []string{remote},
+		}); err != nil {
+			log.Fatalf("%s", err)
+		}
+	}
+
+	return repo.Push(&git.PushOptions{
+		RemoteName: DefaultRemoteName,
+		Auth: auth,
+	})
+
+}
+
 func main() {
 	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 
@@ -101,6 +128,27 @@ func main() {
 		cwd,
 		"git directory",
 	)
+	push := flag.Bool(
+		"push",
+		false,
+		"push repository to remote",
+	)
+	username := flag.String(
+		"username",
+		"",
+		"username",
+	)
+	password := flag.String(
+		"password",
+		"",
+		"password",
+	)
+	remote := flag.String(
+		"remote",
+		"",
+		"remote",
+	)
+
 	flag.Parse()
 
 	repo, err := git.PlainOpen(*gitdir)
@@ -132,4 +180,15 @@ func main() {
 	wg.Wait()
 
 	tree.Clean(&git.CleanOptions{})
+
+	if *push == true {
+		auth := &githttp.BasicAuth{
+			Username: *username,
+			Password: *password,
+		}
+		if err := PushChanges(repo, *remote, auth); err != nil {
+			log.Fatalf("%s", err)
+		}
+		log.Println("Pushed changes to remote")
+	}
 }
