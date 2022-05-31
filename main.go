@@ -208,7 +208,9 @@ func main() {
 		Password: *password,
 	}
 
-	CreateRemote(repo, *remote)
+	if _, err := CreateRemote(repo, *remote); err != nil {
+		log.Fatalf("%s", err)
+	}
 
 	if *push == true {
 		if err := Push(auth, repo); err != nil {
