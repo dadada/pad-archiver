@@ -123,7 +123,7 @@ func Push(
 	auth *githttp.BasicAuth,
 	remote *git.Remote,
 ) error {
-	refspec := fmt.Sprintf("+refs/heads/*:refs/heads/%s/*", DefaultRemoteName)
+	refspec := fmt.Sprintf("+refs/heads/*:refs/heads/*")
 
 	return remote.Push(&git.PushOptions{
 		RemoteName: DefaultRemoteName,
