@@ -124,6 +124,7 @@ func Push(
 	remote *git.Remote,
 ) error {
 	return remote.Push(&git.PushOptions{
+		RemoteName: DefaultRemoteName,
 		Auth: auth,
 	})
 }
