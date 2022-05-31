@@ -107,11 +107,13 @@ func CreateRemote(
 ) (*git.Remote, error) {
 	newRemote, err := repo.Remote(DefaultRemoteName)
 	if err != nil {
-		log.Println("Creating new git remote " + DefaultRemoteName)
+		log.Printf("Creating new git remote %s with URL %s", DefaultRemoteName, remote)
 		return repo.CreateRemote(&config.RemoteConfig{
 			Name: DefaultRemoteName,
 			URLs: []string{remote},
 		})
+	} else {
+		log.Printf("Using remote %s with URL %s", DefaultRemoteName, remote)
 	}
 
 	return newRemote, nil
