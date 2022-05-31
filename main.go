@@ -203,8 +203,6 @@ func main() {
 	}
 	wg.Wait()
 
-	tree.Clean(&git.CleanOptions{Dir: true})
-
 	auth := &githttp.BasicAuth{
 		Username: *username,
 		Password: *password,
@@ -223,4 +221,6 @@ func main() {
 			log.Println("Pushed changes to remote")
 		}
 	}
+
+	tree.Clean(&git.CleanOptions{Dir: true})
 }
