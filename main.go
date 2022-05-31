@@ -121,10 +121,9 @@ func CreateRemote(
 
 func Push(
 	auth *githttp.BasicAuth,
-	repo *git.Repository,
+	remote *git.Remote,
 ) error {
-	return repo.Push(&git.PushOptions{
-		RemoteName: DefaultRemoteName,
+	return remote.Push(&git.PushOptions{
 		Auth: auth,
 	})
 }
@@ -157,7 +156,7 @@ func main() {
 		"",
 		"password",
 	)
-	remote := flag.String(
+	remoteUrl := flag.String(
 		"remote",
 		"",
 		"remote",
@@ -192,7 +191,7 @@ func main() {
 				return
 			}
 			log.Printf("Downloaded %s", padurl)
-			if _, err := Commit(tree, padfile, *remote); err != nil {
+			if _, err := Commit(tree, padfile, *remoteUrl); err != nil {
 				if err == NothingToDo {
 					log.Printf("Nothing to do for %s", padfile)
 				} else {
@@ -210,12 +209,13 @@ func main() {
 		Password: *password,
 	}
 
-	if _, err := CreateRemote(repo, *remote); err != nil {
+	remote, err := CreateRemote(repo, *remoteUrl)
+	if err != nil {
 		log.Fatalf("%s", err)
 	}
 
 	if *push == true {
-		if err := Push(auth, repo); err != nil {
+		if err := Push(auth, remote); err != nil {
 			if err == git.NoErrAlreadyUpToDate {
 				log.Println("Already up-to-date")
 			} else {
