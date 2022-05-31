@@ -178,6 +178,8 @@ func main() {
 		log.Fatalf("Failed to open git worktree %s", err)
 	}
 
+	defer tree.Clean(&git.CleanOptions{Dir: true})
+
 	filesystemRoot := tree.Filesystem.Root()
 	scanner := bufio.NewScanner(os.Stdin)
 
@@ -229,6 +231,4 @@ func main() {
 			log.Println("Pushed changes to remote")
 		}
 	}
-
-	tree.Clean(&git.CleanOptions{Dir: true})
 }
