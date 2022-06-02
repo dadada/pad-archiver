@@ -9,4 +9,4 @@ update:
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
   script:
-    - pad-archiver --push --remote "${CI_REPOSITORY_URL}" --username gitlab-ci-token --password "${CI_ACCESS_TOKEN}" < pads.txt
+    - pad-archiver --push --remote origin --username gitlab-ci-token --password "${CI_ACCESS_TOKEN}" < pads.txt
