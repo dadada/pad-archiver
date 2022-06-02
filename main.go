@@ -22,23 +22,23 @@ import (
 )
 
 const (
-	DefaultRemoteName = "origin"
+	defaultRemoteName = "origin"
 )
 
 var (
-	NothingToDo = errors.New("Nothing to do for unmodified file")
+	nothingToDo = errors.New("Nothing to do for unmodified file")
 )
 
-var Commitmu sync.Mutex
+var cm sync.Mutex
 
 
-func Commit(
+func commit(
 	tree *git.Worktree,
 	padfile string,
 	url string,
 ) (plumbing.Hash, error) {
-	Commitmu.Lock()
-	defer Commitmu.Unlock()
+	cm.Lock()
+	defer cm.Unlock()
 
 	if _, err := tree.Add(padfile); err != nil {
 		return plumbing.ZeroHash, fmt.Errorf("Failed to stage %s: %w", padfile, err)
@@ -51,7 +51,7 @@ func Commit(
 
 	fileStatus := status.File(padfile)
 	if fileStatus.Staging != git.Added && fileStatus.Staging != git.Modified {
-		return plumbing.ZeroHash, NothingToDo
+		return plumbing.ZeroHash, nothingToDo
 	}
 
 	commit, err := tree.Commit(
@@ -73,7 +73,7 @@ func Commit(
 	return commit, nil
 }
 
-func Download(
+func download(
 	gitdir string,
 	url string,
 ) (string, error) {
@@ -102,7 +102,7 @@ func Download(
 }
 
 
-func Push(
+func push(
 	auth *githttp.BasicAuth,
 	r *git.Repository,
 	remote *string,
@@ -126,7 +126,7 @@ func main() {
 		cwd,
 		"git directory",
 	)
-	push := flag.Bool(
+	doPush := flag.Bool(
 		"push",
 		false,
 		"push repository to remote",
@@ -143,7 +143,7 @@ func main() {
 	)
 	remote := flag.String(
 		"remote",
-		DefaultRemoteName,
+		defaultRemoteName,
 		"remote",
 	)
 
@@ -171,15 +171,15 @@ func main() {
 
 		go func() {
 			defer wg.Done()
-			padfile, err := Download(filesystemRoot, padurl)
+			padfile, err := download(filesystemRoot, padurl)
 			if err != nil {
 				log.Printf("%s", err)
 
 				return
 			}
 			log.Printf("Downloaded %s", padurl)
-			if _, err := Commit(tree, padfile, padurl); err != nil {
-				if err == NothingToDo {
+			if _, err := commit(tree, padfile, padurl); err != nil {
+				if err == nothingToDo {
 					log.Printf("Nothing to do for %s", padfile)
 				} else {
 					log.Printf("%s", err)
@@ -196,8 +196,8 @@ func main() {
 		Password: *password,
 	}
 
-	if *push == true {
-		if err := Push(auth, repo, remote); err != nil {
+	if *doPush == true {
+		if err := push(auth, repo, remote); err != nil {
 			if err == git.NoErrAlreadyUpToDate {
 				log.Println("Already up-to-date")
 			} else {
