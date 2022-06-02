@@ -16,13 +16,14 @@ import (
 	"errors"
 
 	"github.com/go-git/go-git/v5"
+	"github.com/go-git/go-git/v5/config"
 	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/go-git/go-git/v5/plumbing/object"
 	githttp "github.com/go-git/go-git/v5/plumbing/transport/http"
 )
 
 const (
-	defaultRemoteName = "origin"
+	defaultRemoteName = "pad-archiver"
 )
 
 var (
@@ -101,14 +102,32 @@ func download(
 	return padfile, nil
 }
 
+func createRemote(
+	repo *git.Repository,
+	remote string,
+	url string,
+) (*git.Remote, error) {
+	newRemote, err := repo.Remote(remote)
+	if err != nil {
+		log.Printf("Creating new git remote %s with URL %s", remote, url)
+		return repo.CreateRemote(&config.RemoteConfig{
+			Name: remote,
+			URLs: []string{url},
+		})
+	} else {
+		log.Printf("Using remote %s with URL %s", remote, url)
+	}
+
+	return newRemote, nil
+}
 
 func push(
 	auth *githttp.BasicAuth,
 	r *git.Repository,
-	remote *string,
+	remote string,
 ) error {
 	return r.Push(&git.PushOptions{
-		RemoteName: *remote,
+		RemoteName: remote,
 		Auth: auth,
 	})
 }
@@ -141,7 +160,7 @@ func main() {
 		"",
 		"password",
 	)
-	remote := flag.String(
+	remoteUrl := flag.String(
 		"remote",
 		defaultRemoteName,
 		"remote",
@@ -197,7 +216,10 @@ func main() {
 	}
 
 	if *doPush == true {
-		if err := push(auth, repo, remote); err != nil {
+		if _, err := createRemote(repo, defaultRemoteName, *remoteUrl); err != nil {
+			log.Fatalf("%s", err)
+		}
+		if err := push(auth, repo, defaultRemoteName); err != nil {
 			if err == git.NoErrAlreadyUpToDate {
 				log.Println("Already up-to-date")
 			} else {
