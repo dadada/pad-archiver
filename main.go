@@ -161,9 +161,9 @@ func main() {
 		"password",
 	)
 	remoteUrl := flag.String(
-		"remote",
-		defaultRemoteName,
-		"remote",
+		"url",
+		"",
+		"url of remote",
 	)
 
 	flag.Parse()
