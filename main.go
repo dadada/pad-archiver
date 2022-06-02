@@ -198,7 +198,7 @@ func main() {
 				if err == NothingToDo {
 					log.Printf("Nothing to do for %s", padfile)
 				} else {
-					log.Fatalf("%s", err)
+					log.Printf("%s", err)
 				}
 			} else {
 				log.Printf("Committed %s", padfile)
