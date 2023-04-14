@@ -20,7 +20,6 @@
             gopls
             gotools
             go-tools
-            go-langserver
             gopls
           ];
         };
