@@ -11,8 +11,8 @@ The CI-config in `lib/gitlab-ci.yml` can be used in your project by including th
 
 ```yaml
 include:
-  - project: 'fginfo/pad-archiver'
-    file: 'lib/gitlab-ci.yml'
+  - https://raw.githubusercontent.com/dadada/pad-archiver/main/lib/gitlab-ci.yml
 ```
 
-The project that includes the CI configuration has to provide the environment variable `CI_ACCESS_TOKEN`. The variable must contain  a project access token that can push commits to your project.
+The project that includes the CI configuration has to provide the environment variable `CI_ACCESS_TOKEN`.
+The variable must contain a project access token that can push commits to your project.

@@ -6,8 +6,8 @@ buildGoModule {
   vendorSha256 = "sha256-vBni3j3o0P13PJg/Ab1ux9zSVr05Iha/sb8dVTX4G0g=";
   meta = with lib; {
     description = "Archives Etherpads with git";
-    homepage = "https://git.fginfo.tu-bs.de/fginfo/pad-archiver";
+    homepage = "https://github.com/dadada/pad-archiver";
     license = licenses.mit;
-    maintainers = [ "y0067212" ];
+    maintainers = [ "dadada" ];
   };
 }

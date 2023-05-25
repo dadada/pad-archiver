@@ -1,4 +1,4 @@
-module git.fginfo.tu-bs.de/fginfo/pad-archiver
+module github.com/dadada/pad-archiver
 
 go 1.19
 

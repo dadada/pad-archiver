@@ -2,7 +2,7 @@ stages:
   - update
 
 update:
-  image: git.fginfo.tu-bs.de:5050/fginfo/pad-archiver:main
+  image: dadada/pad-archiver
   tags:
     - docker
   stage: update
