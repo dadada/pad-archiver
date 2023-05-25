@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"crypto/tls"
+	"errors"
 	"flag"
 	"fmt"
 	"io"
@@ -13,7 +14,6 @@ import (
 	"path/filepath"
 	"sync"
 	"time"
-	"errors"
 
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/config"
@@ -31,7 +31,6 @@ var (
 )
 
 var cm sync.Mutex
-
 
 func commit(
 	tree *git.Worktree,
@@ -59,10 +58,10 @@ func commit(
 		fmt.Sprintf("Updated %s from %s", padfile, url),
 		&git.CommitOptions{
 			All: false,
-			Author: &object.Signature {
-				Name: "Pad Archiver",
+			Author: &object.Signature{
+				Name:  "Pad Archiver",
 				Email: "pad-archiver@dadada.li",
-				When: time.Now(),
+				When:  time.Now(),
 			},
 		},
 	)
@@ -128,7 +127,7 @@ func push(
 ) error {
 	return r.Push(&git.PushOptions{
 		RemoteName: remote,
-		Auth: auth,
+		Auth:       auth,
 	})
 }
 
