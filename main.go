@@ -59,8 +59,8 @@ func commit(
 		&git.CommitOptions{
 			All: false,
 			Author: &object.Signature{
-				Name:  "Pad Archiver",
-				Email: "pad-archiver@dadada.li",
+				Name:  "Pad Archiver[bot]",
+				Email: "dadada+pad-archiver@dadada.li@",
 				When:  time.Now(),
 			},
 		},
