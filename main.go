@@ -147,7 +147,7 @@ func main() {
 	doPush := flag.Bool(
 		"push",
 		false,
-		"Push the changes to the remote specified by remoteUrl",
+		"Push the changes to the remote specified by remoteUrl.",
 	)
 	username := flag.String(
 		"username",

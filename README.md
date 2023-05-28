@@ -3,13 +3,13 @@
 Archives the list of URLs provided on the standard input.
 
 ```plain
-Usage of /bin/pad-archiver:
+Usage of pad-archiver:
   -C string
-        The directory containing the git repository in which to archive the pads. (default "/repo")
+        The directory containing the git repository in which to archive the pads. (default "$PWS")
   -password string
         The password for authenticating to the remote. Can also be specified via the environment variable GIT_PASSWORD.
   -push
-        Push the changes to the remote specified by remoteUrl
+        Push the changes to the remote specified by remoteUrl.
   -url string
         URL to push changes to.
   -username string
