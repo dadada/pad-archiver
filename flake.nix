@@ -16,7 +16,11 @@
             name = "pad-archiver";
             tag = "latest";
             contents = [ pad-archiver ];
+            extraCommands = ''
+              mkdir -p repo
+            '';
             config = {
+              WorkDir = "/repo";
               Entrypoint = [ "${pad-archiver}/bin/pad-archiver" ];
             };
           };
