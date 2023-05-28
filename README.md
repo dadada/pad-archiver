@@ -5,15 +5,15 @@ Archives the list of URLs provided on the standard input.
 ```plain
 Usage of /bin/pad-archiver:
   -C string
-        git directory (default "/repo")
+        The directory containing the git repository in which to archive the pads. (default "/repo")
   -password string
-        password
+        The password for authenticating to the remote. Can also be specified via the environment variable GIT_PASSWORD.
   -push
-        push repository to remote
+        Push the changes to the remote specified by remoteUrl
   -url string
-        url of remote
+        URL to push changes to.
   -username string
-        username
+        The username for authenticating to the remote.
 ```
 
 ```shell
