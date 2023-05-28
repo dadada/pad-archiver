@@ -5,7 +5,7 @@ Archives the list of URLs provided on the standard input.
 ```plain
 Usage of pad-archiver:
   -C string
-        The directory containing the git repository in which to archive the pads. (default "$PWS")
+        The directory containing the git repository in which to archive the pads. (default "$PWD")
   -password string
         The password for authenticating to the remote. Can also be specified via the environment variable GIT_PASSWORD.
   -push
