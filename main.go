@@ -156,7 +156,7 @@ func main() {
 	)
 	password := flag.String(
 		"password",
-		"",
+		os.Getenv("GIT_PASSWORD"),
 		"password",
 	)
 	remoteUrl := flag.String(
