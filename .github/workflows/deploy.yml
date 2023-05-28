@@ -28,11 +28,16 @@ jobs:
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
     - run: nix --experimental-features 'nix-command flakes' build .#dockerImage -L
     - run: docker load -i ./result
-    - run: docker tag pad-archiver ${{ env.IMAGE_NAME }}
+    - run: docker tag pad-archiver ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
     - name: Log in to the Container registry
       uses: docker/login-action@v2
       with:
         registry: ${{ env.REGISTRY }}
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta
+      uses: docker/metadata-action@v4
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
     - run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
