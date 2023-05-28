@@ -20,7 +20,7 @@
               mkdir -p repo
             '';
             config = {
-              WorkDir = "/repo";
+              WorkingDir = "/repo";
               Entrypoint = [ "${pad-archiver}/bin/pad-archiver" ];
             };
           };
