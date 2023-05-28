@@ -11,6 +11,8 @@ env:
 jobs:
   deploy:
     name: "Deploy"
+    permissions:
+      packages: write
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -40,4 +42,4 @@ jobs:
       uses: docker/metadata-action@v4
       with:
         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-    - run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+    - run: docker push ${{ steps.meta.outputs.tags }}
