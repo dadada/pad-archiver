@@ -27,7 +27,7 @@ jobs:
         signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
     - run: nix --experimental-features 'nix-command flakes' build .#dockerImage -L
-    - run: docker load -i ./result/image.tar.gz
+    - run: docker load -i ./result
     - run: docker tag pad-archiver ${{ env.IMAGE_NAME }}
     - name: Log in to the Container registry
       uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
