@@ -2,6 +2,20 @@
 
 Archives the list of URLs provided on the standard input.
 
+```plain
+Usage of /bin/pad-archiver:
+  -C string
+        git directory (default "/repo")
+  -password string
+        password
+  -push
+        push repository to remote
+  -url string
+        url of remote
+  -username string
+        username
+```
+
 ```shell
 go build
 pad-archiver < pads.txt
@@ -11,7 +25,7 @@ pad-archiver < pads.txt
 
 ## Using in GitLab CI
 
-```
+```yaml
 Archive pads:
   image: ghcr.io/dadada/pad-archiver
   rules:
