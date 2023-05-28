@@ -37,3 +37,9 @@ Archive pads:
 ## As a GitHub action
 
 *TODO*
+
+## Using Container Image
+
+```shell
+podman run --rm --mount type=bind,source=./.,destination=/repo -i --workdir /repo ghcr.io/dadada/pad-archiver < pads.txt
+```
