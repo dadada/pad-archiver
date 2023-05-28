@@ -17,9 +17,7 @@
             tag = "latest";
             contents = [ pad-archiver ];
             config = {
-              Cmd = [ "${pad-archiver}/bin/pad-archiver" ];
-              WorkingDir = "/data";
-              Volumes = { "/data" = { }; };
+              Entrypoint = [ "${pad-archiver}/bin/pad-archiver" ];
             };
           };
         };
