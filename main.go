@@ -3,77 +3,40 @@ package main
 import (
 	"bufio"
 	"crypto/tls"
-	"errors"
 	"log"
 	"net/http"
 	"os"
-	"sync"
-
-	"github.com/go-git/go-git/v5"
-	githttp "github.com/go-git/go-git/v5/plumbing/transport/http"
-)
-
-const (
-	defaultRemoteName = "pad-archiver"
-)
-
-var (
-	nothingToDo = errors.New("Nothing to do for unmodified file")
 )
 
 func main() {
 	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 
-	gitdir, doPush, username, password, remoteUrl := getArgs()
-
-	repo, err := git.PlainOpen(*gitdir)
+	workingdir, err := os.Getwd()
 	if err != nil {
-		log.Fatalf("Failed to open git repo %s: %s", *gitdir, err)
+		log.Fatalf("Failed to get working directory %s", err)
 	}
 
-	tree, err := repo.Worktree()
+	gitdir, doPush, username, password, remoteUrl := getArgs(&workingdir)
+
+	repo, tree, err := openRepo(gitdir)
 	if err != nil {
-		log.Fatalf("Failed to open git worktree %s", err)
+		if repo == nil {
+			log.Fatalf("Failed to open git repo %s: %s", *gitdir, err)
+		}
+		if tree == nil {
+			log.Fatalf("Failed to open git worktree %s", err)
+		}
 	}
 
-	defer tree.Clean(&git.CleanOptions{Dir: true})
+	padstxt := bufio.NewScanner(os.Stdin)
 
-	filesystemRoot := tree.Filesystem.Root()
-	scanner := bufio.NewScanner(os.Stdin)
+	updatePads(padstxt, tree)
 
-	var wg sync.WaitGroup
-	for scanner.Scan() {
-		wg.Add(1)
-		padurl := scanner.Text()
-
-		go func() {
-			defer wg.Done()
-			padfile, err := download(filesystemRoot, padurl)
-			if err != nil {
-				log.Printf("%s", err)
-
-				return
-			}
-			log.Printf("Downloaded %s", padurl)
-			if _, err := commit(tree, padfile, padurl); err != nil {
-				if err == nothingToDo {
-					log.Printf("Nothing to do for %s", padfile)
-				} else {
-					log.Printf("%s", err)
-				}
-			} else {
-				log.Printf("Committed %s", padfile)
-			}
-		}()
-	}
-	wg.Wait()
-
-	auth := &githttp.BasicAuth{
-		Username: *username,
-		Password: *password,
-	}
+	auth := auth(username, password)
 
 	if *doPush == true {
-		pushRepo(repo, remoteUrl, auth)
+		if err := pushRepo(repo, remoteUrl, auth); err != nil {
+			log.Fatalf("Failed to push repo: %s", err)
+		}
 	}
 }
