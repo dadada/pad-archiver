@@ -31,7 +31,6 @@
             gopls
             gotools
             go-tools
-            gopls
           ];
         };
       }
