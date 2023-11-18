@@ -44,7 +44,7 @@ func commit(
 			All: false,
 			Author: &object.Signature{
 				Name:  "Pad Archiver[bot]",
-				Email: "dadada+pad-archiver@dadada.li@",
+				Email: "noreply@example.com",
 				When:  time.Now(),
 			},
 		},
