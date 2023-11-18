@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"sync"
 	"time"
@@ -10,13 +11,16 @@ import (
 	"github.com/go-git/go-git/v5/plumbing/object"
 )
 
-var cm sync.Mutex
+var (
+	cm          sync.Mutex
+	nothingToDo = errors.New("Nothing to do for unmodified file")
+)
 
 func commit(
 	tree *git.Worktree,
 	padfile string,
 	url string,
-) (plumbing.Hash, error) {
+) (commit plumbing.Hash, err error) {
 	cm.Lock()
 	defer cm.Unlock()
 
@@ -34,7 +38,7 @@ func commit(
 		return plumbing.ZeroHash, nothingToDo
 	}
 
-	commit, err := tree.Commit(
+	commit, err = tree.Commit(
 		fmt.Sprintf("Updated %s from %s", padfile, url),
 		&git.CommitOptions{
 			All: false,
@@ -50,5 +54,5 @@ func commit(
 		return plumbing.ZeroHash, fmt.Errorf("Failed to commit %s: %w", padfile, err)
 	}
 
-	return commit, nil
+	return
 }

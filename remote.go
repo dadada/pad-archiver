@@ -8,19 +8,31 @@ import (
 	githttp "github.com/go-git/go-git/v5/plumbing/transport/http"
 )
 
-func pushRepo(repo *git.Repository, remoteUrl *string, auth *githttp.BasicAuth) {
-	if _, err := createRemote(repo, defaultRemoteName, *remoteUrl); err != nil {
-		log.Fatalf("%s", err)
+const (
+	defaultRemoteName = "pad-archiver"
+)
+
+func auth(username *string, password *string) (auth *githttp.BasicAuth) {
+	return &githttp.BasicAuth{
+		Username: *username,
+		Password: *password,
 	}
-	if err := push(auth, repo, defaultRemoteName); err != nil {
+}
+
+func pushRepo(repo *git.Repository, remoteUrl *string, auth *githttp.BasicAuth) (err error) {
+	if _, err = createRemote(repo, defaultRemoteName, *remoteUrl); err != nil {
+		return
+	}
+	if err = push(auth, repo, defaultRemoteName); err != nil {
 		if err == git.NoErrAlreadyUpToDate {
 			log.Println("Already up-to-date")
 		} else {
-			log.Fatalf("%s", err)
+			return
 		}
 	} else {
 		log.Println("Pushed changes to remote")
 	}
+	return
 }
 
 func createRemote(

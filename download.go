@@ -12,7 +12,7 @@ import (
 func download(
 	gitdir string,
 	url string,
-) (string, error) {
+) (padfile string, err error) {
 	res, err := http.Get(url + "/export/txt")
 	if err != nil {
 		return "", fmt.Errorf("Failed to get pad at %s: %w", url, err)
@@ -20,7 +20,7 @@ func download(
 
 	defer res.Body.Close()
 
-	padfile := path.Base(url) + ".txt"
+	padfile = path.Base(url) + ".txt"
 
 	padpath := filepath.Join(gitdir, padfile)
 	out, err := os.Create(padpath)
@@ -34,5 +34,5 @@ func download(
 		return "", fmt.Errorf("Skipping update of %s, because pad has likely been removed from %s", padfile, url)
 	}
 
-	return padfile, nil
+	return
 }

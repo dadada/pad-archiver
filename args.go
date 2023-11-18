@@ -2,37 +2,31 @@ package main
 
 import (
 	"flag"
-	"log"
 	"os"
 )
 
-func getArgs() (*string, *bool, *string, *string, *string) {
-	cwd, err := os.Getwd()
-	if err != nil {
-		log.Fatalf("Failed to get working directory %s", err)
-	}
-
-	gitdir := flag.String(
+func getArgs(workingdir *string) (gitdir *string, doPush *bool, username *string, password *string, remoteUrl *string) {
+	gitdir = flag.String(
 		"C",
-		cwd,
+		*workingdir,
 		"The directory containing the git repository in which to archive the pads.",
 	)
-	doPush := flag.Bool(
+	doPush = flag.Bool(
 		"push",
 		false,
 		"Push the changes to the remote specified by remoteUrl.",
 	)
-	username := flag.String(
+	username = flag.String(
 		"username",
 		"",
 		"The username for authenticating to the remote.",
 	)
-	password := flag.String(
+	password = flag.String(
 		"password",
 		os.Getenv("GIT_PASSWORD"),
 		"The password for authenticating to the remote. Can also be specified via the environment variable GIT_PASSWORD.",
 	)
-	remoteUrl := flag.String(
+	remoteUrl = flag.String(
 		"url",
 		"",
 		"URL to push changes to.",
@@ -40,5 +34,5 @@ func getArgs() (*string, *bool, *string, *string, *string) {
 
 	flag.Parse()
 
-	return gitdir, doPush, username, password, remoteUrl
+	return
 }
