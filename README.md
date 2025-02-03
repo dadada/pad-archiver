@@ -34,10 +34,6 @@ Archive pads:
     - --push --url "${CI_PROJECT_URL}.git" --username gitlab-ci-token --password "${CI_ACCESS_TOKEN}" < pads.txt
 ```
 
-## As a GitHub action
-
-*TODO*
-
 ## Using Container Image
 
 ```shell
