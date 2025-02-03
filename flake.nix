@@ -11,7 +11,7 @@
       rec {
         formatter = pkgs.nixpkgs-fmt;
         packages = flake-utils.lib.flattenTree rec {
-          pad-archiver = pkgs.callPackage ./nix { };
+          pad-archiver = pkgs.callPackage ./. { };
           dockerImage = pkgs.dockerTools.buildLayeredImage {
             name = "pad-archiver";
             tag = "latest";
